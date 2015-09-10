@@ -1,0 +1,1 @@
+cmd_/home/ajmokotoff/Desktop/Proj2/hello.ko := ld -r -m elf_i386 -T /usr/src/linux-source-3.13.0/linux-source-3.13.0/scripts/module-common.lds --build-id  -o /home/ajmokotoff/Desktop/Proj2/hello.ko /home/ajmokotoff/Desktop/Proj2/hello.o /home/ajmokotoff/Desktop/Proj2/hello.mod.o
