@@ -16,64 +16,46 @@ unsigned long **sys_call_table;
 asmlinkage long (*ref_sys_cs3013_syscall2)(void);
 
 asmlinkage long new_sys_cs3013_syscall2(struct processinfo *info) {
-	struct list_head *head;
-	struct task_struct *task_info = current;
-	struct processinfo temp;
-	struct task_struct *older_sibling;
-	struct task_struct *younger_sibling;
-	struct task_struct *youngest_child;
+	//LIST_HEAD(task_head);
+	struct list_head *task_head;
+	struct processinfo current_proc_info;
+	struct task_struct *task;
+	pid_t temp_pid;
+	
+	struct task_struct *current_proc = current;
 
-	temp.pid = task_info->pid;
-	temp.state = task_info->state;
-	temp.parent_pid = task_info->parent->pid;
+	current_proc_info.pid = current_proc->pid;
+	current_proc_info.state = current_proc->state;
+	current_proc_info.parent_pid = current_proc->parent->pid;
+	current_proc_info.uid = current_uid().val;
 
-	if(!list_empty(&task_info->children))
-	{
-		youngest_child = list_last_entry(&task_info->children, struct task_struct, children);
-		temp.youngest_child = youngest_child->pid;
-	}
-	else
-	{
-		temp.youngest_child = -1;
-	}
-	if(list_entry(task_info->sibling.next, struct task_struct, sibling)->pid > temp.pid)
-	{
-		younger_sibling = list_entry(task_info->sibling.next, struct task_struct, sibling);
-		temp.younger_sibling = younger_sibling->pid;
-	}
-	else
-	{
-		temp.younger_sibling = -1;
-	}
-	if(list_entry(task_info->sibling.prev, struct task_struct, sibling)->pid < temp.pid)
-	{
-		older_sibling = list_entry(task_info->sibling.prev, struct task_struct, sibling);
-		temp.older_sibling = older_sibling->pid;
-	}
-	else
-	{
-		temp.older_sibling = -1;
-	}
+	(current_proc_info.youngest_child = (!list_empty(&current_proc->children)) ? 
+		list_last_entry(&current_proc->children, struct task_struct, children)->pid : -1);
 
-	temp.uid = task_info->real_cred->uid.val;
-	temp.start_time = timespec_to_ns(&task_info->start_time);
-	temp.user_time = cputime_to_usecs(&task_info->utime);
-	temp.sys_time = cputime_to_usecs(&task_info->stime);
-	temp.cutime = 0;
-	temp.cstime = 0;
+	temp_pid = (list_next_entry(current_proc, sibling)->pid);
+	(current_proc_info.younger_sibling = (temp_pid > current_proc_info.pid) ? temp_pid : -1);
 
-	if(!list_empty(&task_info->children))
+	temp_pid = (list_prev_entry(current_proc, sibling)->pid);
+	(current_proc_info.older_sibling = (temp_pid < current_proc_info.pid) ? temp_pid : -1);
+
+	current_proc_info.start_time = timespec_to_ns(&current_proc->start_time);
+	current_proc_info.user_time = cputime_to_usecs(&current_proc->utime);
+	current_proc_info.sys_time = cputime_to_usecs(&current_proc->stime);
+	current_proc_info.cutime = 0;
+	current_proc_info.cstime = 0;
+
+	if(current_proc_info.youngest_child != -1)
 	{
-		list_for_each(head, &task_info->children)
+		list_for_each(task_head, &current_proc->children)
 		{
-			struct task_struct *t;
-			t = list_entry(head, struct task_struct, children);
-			temp.cutime += cputime_to_usecs(&t->utime);
-			temp.cstime += cputime_to_usecs(&t->stime);
+			task = list_entry(task_head, struct task_struct, children);
+			current_proc_info.cutime += cputime_to_usecs(&task->utime);
+			current_proc_info.cstime += cputime_to_usecs(&task->stime);
 		}
 	}
 
-	if (copy_to_user(info, &temp, sizeof temp)) {
+	if (copy_to_user(info, &current_proc_info, sizeof current_proc_info))
+	{
 		return EFAULT;
 	}
 
