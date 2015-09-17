@@ -16,12 +16,10 @@ unsigned long **sys_call_table;
 asmlinkage long (*ref_sys_cs3013_syscall2)(void);
 
 asmlinkage long new_sys_cs3013_syscall2(struct processinfo *info) {
-	//LIST_HEAD(task_head);
 	struct list_head *task_head;
 	struct processinfo current_proc_info;
 	struct task_struct *task;
 	pid_t temp_pid;
-	
 	struct task_struct *current_proc = current;
 
 	current_proc_info.pid = current_proc->pid;
@@ -44,21 +42,17 @@ asmlinkage long new_sys_cs3013_syscall2(struct processinfo *info) {
 	current_proc_info.cutime = 0;
 	current_proc_info.cstime = 0;
 
-	if(current_proc_info.youngest_child != -1)
-	{
-		list_for_each(task_head, &current_proc->children)
-		{
+	if(current_proc_info.youngest_child != -1) {
+		list_for_each(task_head, &current_proc->children) {
 			task = list_entry(task_head, struct task_struct, children);
 			current_proc_info.cutime += cputime_to_usecs(&task->utime);
 			current_proc_info.cstime += cputime_to_usecs(&task->stime);
 		}
 	}
 
-	if (copy_to_user(info, &current_proc_info, sizeof current_proc_info))
-	{
+	if (copy_to_user(info, &current_proc_info, sizeof current_proc_info)) {
 		return EFAULT;
 	}
-
 	return 0;
 }
 
