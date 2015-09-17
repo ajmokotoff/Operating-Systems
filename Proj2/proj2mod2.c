@@ -16,23 +16,67 @@ unsigned long **sys_call_table;
 asmlinkage long (*ref_sys_cs3013_syscall2)(void);
 
 asmlinkage long new_sys_cs3013_syscall2(struct processinfo *info) {
+	struct list_head *head;
 	struct task_struct *task_info = current;
-	struct processinfo tmp;
-	tmp.state = task_info->state;
-	tmp.pid = task_info->pid;
-	tmp.parent_pid = task_info->real_parent->pid;
-	//tmp.youngest_child = task_info->p_cptr->pid;
-	//tmp.younger_sibling = task_info->p_ysptr->pid;
-	//tmp.older_sibling = task_info->p_osptr->pid;
-	tmp.uid = task_info->real_cred->uid.val;
-	tmp.start_time = timespec_to_ns(&task_info->start_time);
-	tmp.user_time = cputime_to_usecs(&task_info->utime);
-	tmp.sys_time = cputime_to_usecs(&task_info->stime);
-	tmp.cutime = 0;
-	tmp.cstime = 0;
-	if (copy_to_user(info, &tmp, sizeof tmp)) {
-            return EFAULT;
+	struct processinfo temp;
+	struct task_struct *older_sibling;
+	struct task_struct *younger_sibling;
+	struct task_struct *youngest_child;
+
+	temp.pid = task_info->pid;
+	temp.state = task_info->state;
+	temp.parent_pid = task_info->parent->pid;
+
+	if(!list_empty(&task_info->children))
+	{
+		youngest_child = list_last_entry(&task_info->children, struct task_struct, children);
+		temp.youngest_child = youngest_child->pid;
 	}
+	else
+	{
+		temp.youngest_child = -1;
+	}
+	if(list_entry(task_info->sibling.next, struct task_struct, sibling)->pid > temp.pid)
+	{
+		younger_sibling = list_entry(task_info->sibling.next, struct task_struct, sibling);
+		temp.younger_sibling = younger_sibling->pid;
+	}
+	else
+	{
+		temp.younger_sibling = -1;
+	}
+	if(list_entry(task_info->sibling.prev, struct task_struct, sibling)->pid < temp.pid)
+	{
+		older_sibling = list_entry(task_info->sibling.prev, struct task_struct, sibling);
+		temp.older_sibling = older_sibling->pid;
+	}
+	else
+	{
+		temp.older_sibling = -1;
+	}
+
+	temp.uid = task_info->real_cred->uid.val;
+	temp.start_time = timespec_to_ns(&task_info->start_time);
+	temp.user_time = cputime_to_usecs(&task_info->utime);
+	temp.sys_time = cputime_to_usecs(&task_info->stime);
+	temp.cutime = 0;
+	temp.cstime = 0;
+
+	if(!list_empty(&task_info->children))
+	{
+		list_for_each(head, &task_info->children)
+		{
+			struct task_struct *t;
+			t = list_entry(head, struct task_struct, children);
+			temp.cutime += cputime_to_usecs(&t->utime);
+			temp.cstime += cputime_to_usecs(&t->stime);
+		}
+	}
+
+	if (copy_to_user(info, &temp, sizeof temp)) {
+		return EFAULT;
+	}
+
 	return 0;
 }
 
@@ -112,7 +156,7 @@ static void __exit interceptor_end(void) {
   
   /* Revert all system calls to what they were before we began. */
   disable_page_protection();
-  sys_call_table[__NR_cs3013_syscall1] = (unsigned long *)ref_sys_cs3013_syscall2;
+  sys_call_table[__NR_cs3013_syscall2] = (unsigned long *)ref_sys_cs3013_syscall2;
   enable_page_protection();
 
   printk(KERN_INFO "Unloaded interceptor!");
