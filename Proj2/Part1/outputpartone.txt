@@ -1,0 +1,10 @@
+Sep 17 18:14:33 ubuntu kernel: [ 5257.473434] User 1000 opened file: /etc/ld.so.cache
+Sep 17 18:14:33 ubuntu kernel: [ 5257.473442] User 1000 closed file descriptor: 3
+Sep 17 18:14:33 ubuntu kernel: [ 5257.473461] User 1000 opened file: /lib/i386-linux-gnu/libc.so.6
+Sep 17 18:14:33 ubuntu kernel: [ 5257.473490] User 1000 closed file descriptor: 3
+Sep 17 18:14:33 ubuntu kernel: [ 5257.473698] User 1000 opened file: /usr/lib/locale/locale-archive
+Sep 17 18:14:33 ubuntu kernel: [ 5257.473719] User 1000 closed file descriptor: 3
+Sep 17 18:14:33 ubuntu kernel: [ 5257.473755] User 1000 opened file: /var/log/syslog
+Sep 17 18:14:33 ubuntu kernel: [ 5257.473814] User 1000 closed file descriptor: 3
+Sep 17 18:14:33 ubuntu kernel: [ 5257.473826] User 1000 closed file descriptor: 1
+Sep 17 18:14:33 ubuntu kernel: [ 5257.473831] User 1000 closed file descriptor: 2

@@ -1,0 +1,13 @@
+Sep 17 18:18:05 ubuntu kernel: [ 5436.318171] Unloaded interceptor!
+Sep 17 18:18:19 ubuntu dhclient: DHCPREQUEST of 192.168.161.132 on eth0 to 192.168.161.254 port 67 (xid=0x50af6ab4)
+Sep 17 18:18:19 ubuntu dhclient: DHCPACK of 192.168.161.132 from 192.168.161.254
+Sep 17 18:18:19 ubuntu dhclient: bound to 192.168.161.132 -- renewal in 874 seconds.
+Sep 17 18:18:19 ubuntu NetworkManager[768]: <info> (eth0): DHCPv4 state changed renew -> renew
+Sep 17 18:18:19 ubuntu NetworkManager[768]: <info>   address 192.168.161.132
+Sep 17 18:18:19 ubuntu NetworkManager[768]: <info>   prefix 24 (255.255.255.0)
+Sep 17 18:18:19 ubuntu NetworkManager[768]: <info>   gateway 192.168.161.2
+Sep 17 18:18:19 ubuntu NetworkManager[768]: <info>   nameserver '192.168.161.2'
+Sep 17 18:18:19 ubuntu NetworkManager[768]: <info>   domain name 'localdomain'
+Sep 17 18:18:19 ubuntu NetworkManager[768]: <info>   wins '192.168.161.2'
+Sep 17 18:18:19 ubuntu dbus[453]: [system] Activating service name='org.freedesktop.nm_dispatcher' (using servicehelper)
+Sep 17 18:18:19 ubuntu dbus[453]: [system] Successfully activated service 'org.freedesktop.nm_dispatcher'
