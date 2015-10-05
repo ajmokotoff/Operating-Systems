@@ -6,8 +6,7 @@
  * @param m The maze that the rat lives in.
  * @param mode The traversal mode, 0 if normal 1 if non-blocking
  */
-Rat::Rat(int ratID, Maze * m, int room, int mode)
-{
+Rat::Rat(int ratID, Maze* m, int room, int mode) {
     id = ratID;
     maze = m;
     startingRoom = room;
@@ -32,7 +31,7 @@ bool Rat::StartThread()
  * <code>this</code> would refer to, therefore a reference to the 
  * calling rat needs to be passed in.
  */
-void * Rat::Traverse(void * rat)
+void* Rat::Traverse(void* rat)
 {
     if (!traversalMode)
     {

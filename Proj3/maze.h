@@ -5,13 +5,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
-#include <vector>
 #include <string>
 #include "room.h"
 #include <fstream>
 #include <cstring>
 #include "rat.h"
 #include <time.h>
+#include <deque>
 
 #define MAXRATS 5
 #define MAXROOMS 8
@@ -30,12 +30,12 @@ typedef struct{
 typedef struct{
     int maxRats;
     int maxRooms;
+    deque<Room> rooms;
+    deque<Rat> rats;
     time_t mazeStartTime;
     vbentry RoomVB[MAXROOMS][MAXRATS];
     int VisitorCount[MAXROOMS];
     sem_t vbSem;
-    vector<Room> rooms;
-    vector<Rat> rats;
 } Maze;
 
 void start_maze(string configfile, int maxrats, int maxrooms, char alg);
