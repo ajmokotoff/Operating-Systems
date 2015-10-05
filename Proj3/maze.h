@@ -39,7 +39,6 @@ typedef struct{
 } Maze;
 
 void start_maze(string configfile, int maxrats, int maxrooms, char alg);
-int getTimeDiffSeconds();
 void run();
 void addToLogbook(int room, int ratID, int timeEntry, int timeDep);
 int getCheapestRoom(int * visited);

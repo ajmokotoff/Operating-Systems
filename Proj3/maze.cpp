@@ -63,17 +63,6 @@ void start_maze(string configfile, int maxrats, int maxrooms, char alg)
     sem_init(&maze.vbSem, 0, 1);
 }
 
-
-/**
- * Get the difference in seconds between now and when the maze
- * traversal started. Simplifies log book entering in the rat class.
- */
-int getTimeDiffSeconds()
-{
-    time_t t = time(NULL);
-    return (int)difftime(t, maze.mazeStartTime);
-}
-
 /**
  * Run the maze. This starts and kills all of the rats, and 
  * then prints out all of the results of the maze traversal.

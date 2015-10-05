@@ -34,7 +34,7 @@ bool Rat::StartThread()
  */
 void * Rat::Traverse(void * rat)
 {
-    if (traversalMode == 0)
+    if (!traversalMode)
     {
         int idx = ((Rat *)rat)->startingRoom;
         int visited = 0;
@@ -43,10 +43,10 @@ void * Rat::Traverse(void * rat)
         {
             r = &maze->rooms.at(idx);
             r->EnterRoom();
-            int entryTime = getTimeDiffSeconds();
+            int entryTime = (int)difftime(time(NULL), maze->mazeStartTime);
             sleep(r->getTraversalTime());
             r->LeaveRoom();
-            int exitTime = getTimeDiffSeconds();
+            int exitTime = (int)difftime(time(NULL), maze->mazeStartTime);
             addToLogbook(idx, ((Rat *)rat)->id, entryTime, exitTime);
             visited++;
             idx++;
@@ -80,12 +80,12 @@ void * Rat::Traverse(void * rat)
             else
             {
                 r = &maze->rooms.at(idx);
-                if (r->TryToEnterRoom() == 0)
+                if (!r->TryToEnterRoom())
                 {
-                    int entryTime = getTimeDiffSeconds();
+                    int entryTime = (int)difftime(time(NULL), maze->mazeStartTime);
                     sleep(r->getTraversalTime());
                     r->LeaveRoom();
-                    int exitTime = getTimeDiffSeconds();
+            	    int exitTime = (int)difftime(time(NULL), maze->mazeStartTime);
                     addToLogbook(idx, ((Rat *)rat)->id, entryTime, exitTime);
                     visited++;
                     visitedRooms[idx] = 1;
@@ -96,7 +96,7 @@ void * Rat::Traverse(void * rat)
             }
         }
     }
-    ((Rat *)rat)->timeToComplete = getTimeDiffSeconds();
+    ((Rat *)rat)->timeToComplete = (int)difftime(time(NULL), maze->mazeStartTime);;
     return NULL;
 }
 
