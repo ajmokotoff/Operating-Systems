@@ -21,15 +21,12 @@ using namespace std;
 class Room;
 class Rat;
 
-typedef struct{
-    int iRat; //rat identifier
-    int tEntry; //Time of rat entry
-    int tDep; //time of rat departure
+typedef struct {
+    int iRat, tEntry, tDep;
 } vbentry;
 
-typedef struct{
-    int maxRats;
-    int maxRooms;
+typedef struct {
+    int maxRats, maxRooms;
     deque<Room> rooms;
     deque<Rat> rats;
     time_t mazeStartTime;
