@@ -34,14 +34,13 @@ private:
     {
         return ((Rat *)rat)->Traverse(rat);
     };
-protected:
-    void * Traverse(void * rat);
 public:
     Rat(int ratID, Maze* m, int room, int mode);
     virtual ~Rat() {};
     bool StartThread();
     bool JoinThread();
     int getTime();
+    void * Traverse(void * rat);
 };
 #endif
 
