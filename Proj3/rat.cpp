@@ -1,21 +1,6 @@
 #include "rat.h"
 
 /**
- * Create the rat object.
- * @param ratID The ID for the rat.
- * @param m The maze that the rat lives in.
- * @param mode The traversal mode, 0 if normal 1 if non-blocking
- */
-Rat::Rat(int ratID, Maze* m, int room, int mode) {
-    id = ratID;
-    maze = m;
-    startingRoom = room;
-    traversalMode = mode;
-    cout << "Rat " << id << " created, starting in room " <<
-        startingRoom << "." << endl;
-}
-
-/**
  * Start the rat thread, beginning the traversal of the maze.
  * @return true if traversal successful.
  */
@@ -66,7 +51,7 @@ void* Rat::Traverse(void* rat)
          * The definition of which room is cheapest is given in 
          * the <code>room</code> class.
          */
-        int idx = ((Rat *)rat)->startingRoom;
+        int idx = ((Rat*)rat)->startingRoom;
         int visited = 0;
         int visitedRooms[MAXROOMS] = {};
         Room * r;
@@ -104,7 +89,7 @@ void* Rat::Traverse(void* rat)
  * @return True if joined successfully.
  */
 bool Rat::JoinThread()
-{
+{   
     return (pthread_join(_thread, NULL) == 0);
 }
 

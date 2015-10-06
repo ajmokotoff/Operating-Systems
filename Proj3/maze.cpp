@@ -21,7 +21,9 @@ void start_maze(string configfile, int maxrats, int maxrooms, char alg) {
         exit(0);
     }
     cout << "Initializing a new maze..." << endl;
-    
+
+    cout << "Creating new maze with a maximum of " << maxrooms << " rooms and " << maxrats << " rats." << endl;
+    cout << "Opened config file at " << configfile << endl;    
 
     int capacity, delayTime, numrooms = 0;
     string str;
@@ -76,6 +78,7 @@ void run() {
     {
         maze.rats.at(i).JoinThread();
     }
+    cout << "working" << endl;
     int idealTime = 0;
     for (int i = 0; i < maze.rooms.size(); i++)
     {
