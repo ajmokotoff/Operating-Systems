@@ -1,59 +1,65 @@
 #include "rat.h"
 
-
+/* Start rat thread and return whether it worked
+ */
 bool Rat::StartThread() {
-    return (!(pthread_create(&_thread, NULL, &this->StartThreadFunction, this)));
+    return (!(pthread_create(&thread, NULL, &this->StartThreadHelper, this)));
 }
 
+/* End rat thread and return whether it worked
+ */
 bool Rat::JoinThread() {   
-    return (!(pthread_join(_thread, NULL)));
+    return (!(pthread_join(thread, NULL)));
 }
 
+/* Function that lets the rat run through the maze
+ */
 void* Rat::Traverse(void* rat) {
-    if (!traversalMode) {
-        int idx = ((Rat *)rat)->startingRoom;
+    if (!traversal) { 
+        int room_id = ((Rat *)rat)->start_room;
         int visited = 0;
-        Room* r;
+        Room* room;
         while (visited < maze->rooms.size()) {
-            r = &maze->rooms.at(idx);
-            r->EnterRoom();
-            int entryTime = (int)difftime(time(NULL), maze->mazeStartTime);
-            sleep(r->traversalTime);
+            room = &maze->rooms.at(room_id);
+            room->EnterRoom();
+            int entryTime = (int)difftime(time(NULL), maze->maze_start);
+            sleep(room->traversal_time);
 
-            r->LeaveRoom();
-            int exitTime = (int)difftime(time(NULL), maze->mazeStartTime);
-            addToLogbook(idx, ((Rat *)rat)->id, entryTime, exitTime);
+            room->LeaveRoom();
+            int exitTime = (int)difftime(time(NULL), maze->maze_start);
+            addToLogbook(room_id, ((Rat *)rat)->id, entryTime, exitTime);
             visited++;
-            idx++;
-            idx = (maze->rooms.size() - 1 < idx) ? 0:idx;
+            room_id++;
+            room_id = (maze->rooms.size() - 1 < room_id) ? 0:room_id;
         }
     } else {
-        int idx = ((Rat*)rat)->startingRoom;
+        int room_id = ((Rat*)rat)->start_room;
         int visited = 0;
         int visitedRooms[MAXROOMS] = {};
-        Room* r;
+        Room* room;
+        // non blocking algorithm begins below
         while (visited < maze->rooms.size()) {
-            if (visitedRooms[idx]) {
-                idx = getCheapestRoom(visitedRooms);
+            if (visitedRooms[room_id]) {
+                room_id = getCheapestRoom(visitedRooms);
             }
             else {
-                r = &maze->rooms.at(idx);
-                if (!(r->TryToEnterRoom())) {
-                    int entryTime = (int)difftime(time(NULL), maze->mazeStartTime);
-                    sleep(r->traversalTime);
+                room = &maze->rooms.at(room_id);
+                if (!(room->TryToEnterRoom())) {
+                    int entry_time = (int)difftime(time(NULL), maze->maze_start);
+                    sleep(room->traversal_time);
 
-                    r->LeaveRoom();
-            	    int exitTime = (int)difftime(time(NULL), maze->mazeStartTime);
-                    addToLogbook(idx, ((Rat *)rat)->id, entryTime, exitTime);
+                    room->LeaveRoom();
+            	    int exit_time = (int)difftime(time(NULL), maze->maze_start);
+                    addToLogbook(room_id, ((Rat *)rat)->id, entry_time, exit_time);
                     visited++;
-                    visitedRooms[idx] = 1;
+                    visitedRooms[room_id] = 1;
                 } else {
-                    idx = getCheapestRoom(visitedRooms);
+                    room_id = getCheapestRoom(visitedRooms);
                 }
             }
         }
     }
-    ((Rat *)rat)->timeToComplete = (int)difftime(time(NULL), maze->mazeStartTime);
+    ((Rat *)rat)->time_complete = (int)difftime(time(NULL), maze->maze_start);
     return NULL;
 }
 

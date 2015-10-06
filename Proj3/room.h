@@ -12,11 +12,11 @@ using namespace std;
 class Rat;
 
 struct Room {
-    int roomCapacity, traversalTime, roomID;
-    sem_t door;
+    int room_capacity, traversal_time, room_ID; // max capacity for a room, time of traversal, id for the room
+    sem_t entry; // semaphore for each room
 
-    Room(int id, int capacity, int time) : roomCapacity(capacity), traversalTime(time), roomID(id) {
-        sem_init(&door, 0, roomCapacity);
+    Room(int id, int capacity, int time) : room_capacity(capacity), traversal_time(time), room_ID(id) {
+        sem_init(&entry, 0, room_capacity);
     };
 
     void EnterRoom();

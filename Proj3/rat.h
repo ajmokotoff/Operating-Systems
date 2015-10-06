@@ -12,18 +12,20 @@ using namespace std;
 class Room;
 
 struct Rat {
-    pthread_t _thread;
-    int id, startingRoom, timeToComplete, traversalMode;
-    Maze* maze;
+    pthread_t thread;
+    int id, start_room, time_complete, traversal; // rat id, room to start in, time it took to finish, non blocking or blocking
+    Maze* maze; // pointer to maze
     
-    Rat(int ratID, Maze* m, int room, int mode) : id(ratID), maze(m), startingRoom(room), traversalMode(mode) {}
+    // constructor to create rat
+    Rat(int ratID, Maze* m, int room, int mode) : id(ratID), maze(m), start_room(room), traversal(mode) {}
 
-    bool StartThread();
-    bool JoinThread();
+    bool StartThread(); // start rat thread
+    bool JoinThread(); // end rat thread
 
-    void* Traverse(void* rat);
-
-    static void* StartThreadFunction(void* rat) {
+    void* Traverse(void* rat); // traverse through maze
+ 
+    //made a global static helper function to eliminate any possible bugs 
+    static void* StartThreadHelper(void* rat) {
         return ((Rat *)rat)->Traverse(rat);
     };
 };

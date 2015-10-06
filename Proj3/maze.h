@@ -26,19 +26,19 @@ typedef struct {
 } vbentry;
 
 typedef struct {
-    int maxRats, maxRooms;
-    deque<Room> rooms;
-    deque<Rat> rats;
-    time_t mazeStartTime;
-    vbentry RoomVB[MAXROOMS][MAXRATS];
-    int VisitorCount[MAXROOMS];
-    sem_t vbSem;
+    int max_rats, max_rooms; // max rats in maze, max rooms in maze
+    deque<Room> rooms; //deque of all rooms
+    deque<Rat> rats; //deque of all rats
+    time_t maze_start; //time the maze started
+    vbentry RoomVB[MAXROOMS][MAXRATS]; //array of room entries
+    int VisitorCount[MAXROOMS]; //number of visitors array
+    sem_t book_sem; // semaphore for book
 } Maze;
 
-void start_maze(string configfile, int maxrats, int maxrooms, char alg);
+void start_maze(string config_file, int maxRats, int maxRooms, char algorithm);
 void run();
-void addToLogbook(int room, int ratID, int timeEntry, int timeDep);
-int getCheapestRoom(int * visited);
+void addToLogbook(int room, int rat_ID, int time_entry, int time_exit);
+int getCheapestRoom(int* visited);
 
 #endif
 
