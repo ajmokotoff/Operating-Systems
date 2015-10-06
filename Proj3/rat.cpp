@@ -28,7 +28,7 @@ void* Rat::Traverse(void* rat)
             r = &maze->rooms.at(idx);
             r->EnterRoom();
             int entryTime = (int)difftime(time(NULL), maze->mazeStartTime);
-            sleep(r->getTraversalTime());
+            sleep(r->traversalTime);
             r->LeaveRoom();
             int exitTime = (int)difftime(time(NULL), maze->mazeStartTime);
             addToLogbook(idx, ((Rat *)rat)->id, entryTime, exitTime);
@@ -67,7 +67,7 @@ void* Rat::Traverse(void* rat)
                 if (!r->TryToEnterRoom())
                 {
                     int entryTime = (int)difftime(time(NULL), maze->mazeStartTime);
-                    sleep(r->getTraversalTime());
+                    sleep(r->traversalTime);
                     r->LeaveRoom();
             	    int exitTime = (int)difftime(time(NULL), maze->mazeStartTime);
                     addToLogbook(idx, ((Rat *)rat)->id, entryTime, exitTime);
@@ -93,12 +93,3 @@ bool Rat::JoinThread()
     return (pthread_join(_thread, NULL) == 0);
 }
 
-/**
- * Get the time that the rat took to traverse
- * the maze.
- * @return int Traversal time in seconds.
- */
-int Rat::getTime()
-{
-    return timeToComplete;
-}

@@ -82,8 +82,8 @@ void run() {
     int idealTime = 0;
     for (int i = 0; i < maze.rooms.size(); i++)
     {
-        cout << "Room " << i << " [" << maze.rooms.at(i).getTraversalTime() << " " << maze.rooms.at(i).getCapacity() << "]: ";
-        idealTime += maze.rooms.at(i).getTraversalTime();
+        cout << "Room " << i << " [" << maze.rooms.at(i).traversalTime << " " << maze.rooms.at(i).roomCapacity << "]: ";
+        idealTime += maze.rooms.at(i).traversalTime;
         for (int j = 0; j < maze.rats.size(); j++)
         {
             cout << maze.RoomVB[i][j].iRat << " " << maze.RoomVB[i][j].tEntry << " " << maze.RoomVB[i][j].tDep << "; ";
@@ -94,8 +94,8 @@ void run() {
     int totaltime = 0;
     for (int i = 0; i < maze.rats.size(); i++)
     {
-        cout << "Rat " << i << " completed maze in " << maze.rats.at(i).getTime() << " seconds." << endl;
-        totaltime += maze.rats.at(i).getTime();
+        cout << "Rat " << i << " completed maze in " << maze.rats.at(i).timeToComplete << " seconds." << endl;
+        totaltime += maze.rats.at(i).timeToComplete;
     }
     cout << "Total traversal time: " << totaltime << " seconds, compared to ideal time: " << idealTime << " seconds." << endl;
 }

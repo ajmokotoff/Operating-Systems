@@ -26,7 +26,7 @@ struct Rat {
 
     bool StartThread();
     bool JoinThread();
-    int getTime();
+
     void* Traverse(void* rat);
 
     static void* StartThreadFunction(void* rat) {
